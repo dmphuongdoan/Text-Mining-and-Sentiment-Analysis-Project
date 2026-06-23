@@ -4,7 +4,7 @@ import os
 import json
 import time
 
-load_dotenv()
+load_dotenv() # Load environment variables from .env file (e.g., HF_TOKEN)
 client = InferenceClient(token=os.getenv("HF_TOKEN"))
 
 # 4 prompts covering 4 different writing genres
@@ -35,11 +35,11 @@ N_REPEATS = 3
 def generate_text(prompt, model):
     """Send a prompt to a model and return the response."""
     response = client.chat_completion(
-        messages=[{"role": "user", "content": prompt}],
+        messages=[{"role": "user", "content": prompt}], # The prompt to send to the model
         model=model,
-        max_tokens=500,
-        temperature = 0.7)
-    return response.choices[0].message.content
+        max_tokens=500, #Limits the length of the generated text (350-400 words)
+        temperature = 0.7) #Controls the randomness of the generated text (0.0 = deterministic, 1.0 = very random)
+    return response.choices[0].message.content # Return the generated text from the model's response
 
 def collect_all():
     """Loop through all models, prompts and repeats, save to JSON."""
@@ -47,7 +47,7 @@ def collect_all():
     for model_name, model_id in MODELS.items():
         for genre, prompt in PROMPTS.items():
             for repeat in range(N_REPEATS):
-                print(f"Collecting: {model_name} - {genre} (run {repeat+1}/{N_REPEATS})...")
+                print(f"Collecting: {model_name} - {genre} (run {repeat+1}/{N_REPEATS})...") # model name -> genre -> repeat number
                 try:
                     text = generate_text(prompt, model_id)
                     results.append({
@@ -62,7 +62,7 @@ def collect_all():
                 except Exception as e:
                     print(f"❌ Error: {e}")
 
-    with open("data/corpus.json", "w", encoding="utf-8") as f:
+    with open("data/corpus.json", "w", encoding="utf-8") as f: # "utf-8" encoding ensures proper handling of special characters
         json.dump(results, f, ensure_ascii=False, indent=2)
 
     print(f"\n✅ Finished! Collected {len(results)} texts.")

@@ -141,6 +141,90 @@ def plot_pca(df):
     plt.savefig("results/pca_styles.png", dpi=150)
     print("✅ Saved: results/pca_styles.png")
 
+
+def plot_tsne(df):
+    """
+    t-SNE plot: alternative to PCA, often shows clearer clusters.
+    Unlike PCA, t-SNE preserves local structure between points.
+    """
+    from sklearn.manifold import TSNE
+
+    features = [
+        "lexical_diversity",
+        "avg_sentence_length",
+        "adj_ratio",
+        "verb_ratio",
+        "noun_ratio",
+        "punct_frequency"
+    ]
+
+    X = df[features].values
+    labels = df["model"].values
+    genres = df["genre"].values
+
+    # Reduce 6 features → 2 dimensions using t-SNE
+    tsne = TSNE(n_components=2, random_state=42, perplexity=10)
+    X_tsne = tsne.fit_transform(X)
+
+    color_map = {
+        "qwen":   "#4C72B0",
+        "qwen72": "#DD8452",
+        "qwen3":  "#55A868"
+    }
+
+    marker_map = {
+        "narration":     "o",
+        "argumentation": "s",
+        "dialogue":      "^",
+        "description":   "D"
+    }
+
+    fig, ax = plt.subplots(figsize=(10, 7))
+
+    for i, (x, y) in enumerate(X_tsne):
+        model = labels[i]
+        genre = genres[i]
+        ax.scatter(
+            x, y,
+            color=color_map[model],
+            marker=marker_map[genre],
+            s=150,
+            alpha=0.8,
+            zorder=3
+        )
+
+    # Legend for models
+    model_patches = [
+        mpatches.Patch(color=c, label=m)
+        for m, c in color_map.items()
+    ]
+
+    # Legend for genres
+    genre_patches = [
+        plt.Line2D([0], [0],
+                   marker=mk, color="gray",
+                   label=g, markersize=8,
+                   linestyle="None")
+        for g, mk in marker_map.items()
+    ]
+
+    ax.legend(
+        handles=model_patches + genre_patches,
+        loc="best", fontsize=8
+    )
+
+    ax.set_xlabel("t-SNE Dimension 1")
+    ax.set_ylabel("t-SNE Dimension 2")
+    ax.set_title(
+        "t-SNE of Stylometric Features — Aesthetic Landscape",
+        fontsize=13, fontweight="bold"
+    )
+    ax.grid(alpha=0.3)
+
+    plt.tight_layout()
+    plt.savefig("results/tsne_styles.png", dpi=150)
+    print("✅ Saved: results/tsne_styles.png")
+
 if __name__ == "__main__":
     df = load_features()
 
@@ -168,3 +252,6 @@ if __name__ == "__main__":
     plot_pca(df)
 
     print("\n🎉 All charts saved in results/ folder!")
+
+    # Chart 5: t-SNE
+    plot_tsne(df)

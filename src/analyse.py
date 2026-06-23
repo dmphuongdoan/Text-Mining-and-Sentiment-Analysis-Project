@@ -1,13 +1,13 @@
 import json
-import nltk
+import nltk # Natural Language Toolkit for text processing
 import pandas as pd
 from collections import Counter
 
 # Download NLTK data (only running once time)
-nltk.download('punkt')
-nltk.download('averaged_perceptron_tagger')
-nltk.download('punkt_tab')
-nltk.download('averaged_perceptron_tagger_eng')
+nltk.download('punkt') # Tokenizer for splitting text into words and sentences
+nltk.download('averaged_perceptron_tagger') # Part-of-speech tagger for identifying nouns, verbs, adjectives, etc.
+nltk.download('punkt_tab') # Download punkt sentence tokenizer data
+nltk.download('averaged_perceptron_tagger_eng') # Download English part-of-speech tagger data
 
 # ============================================================
 # WHAT THIS FILE DOES:
@@ -26,22 +26,22 @@ def lexical_diversity(text):
     Formula: unique words / total words
     High score = more varied vocabulary
     """
-    words = nltk.word_tokenize(text.lower())
+    words = nltk.word_tokenize(text.lower()) # tokenize text into words and convert to lowercase
     words = [w for w in words if w.isalpha()]  # remove punctuation
     if len(words) == 0:
         return 0
-    return len(set(words)) / len(words)
+    return len(set(words)) / len(words) # unique words divided by total words = lexical diversity
 
 def avg_sentence_length(text):
     """
     Measure average number of words per sentence.
     High score = longer, more complex sentences
     """
-    sentences = nltk.sent_tokenize(text)
+    sentences = nltk.sent_tokenize(text) # split text into sentences using NLTK's sentence tokenizer
     if len(sentences) == 0:
         return 0
-    lengths = [len(nltk.word_tokenize(s)) for s in sentences]
-    return sum(lengths) / len(lengths)
+    lengths = [len(nltk.word_tokenize(s)) for s in sentences] # list of sentence lengths in words
+    return sum(lengths) / len(lengths) # average sentence length = total words divided by number of sentences
 
 def pos_ratios(text):
     """
@@ -50,15 +50,15 @@ def pos_ratios(text):
     - Many verbs = action-driven writing
     - Many nouns = informational writing
     """
-    words = nltk.word_tokenize(text)
-    tags = nltk.pos_tag(words)
+    words = nltk.word_tokenize(text) # tokenize text into words
+    tags = nltk.pos_tag(words) # tag each word with its part of speech (e.g., noun, verb, adjective)
     total = len(tags)
     if total == 0:
         return 0, 0, 0
 
-    adj   = sum(1 for _, t in tags if t.startswith('JJ')) / total
-    verb  = sum(1 for _, t in tags if t.startswith('VB')) / total
-    noun  = sum(1 for _, t in tags if t.startswith('NN')) / total
+    adj   = sum(1 for _, t in tags if t.startswith('JJ')) / total # Adjectives in NLTK are tagged as 'JJ', 'JJR', 'JJS' (base, comparative, superlative)
+    verb  = sum(1 for _, t in tags if t.startswith('VB')) / total # Verbs in NLTK are tagged as 'VB', 'VBD', 'VBG', 'VBN', 'VBP', 'VBZ' (base, past, gerund, past participle, present, present participle)
+    noun  = sum(1 for _, t in tags if t.startswith('NN')) / total # Nouns in NLTK are tagged as 'NN', 'NNS' (singular, plural)
 
     return adj, verb, noun
 
@@ -68,11 +68,11 @@ def punctuation_frequency(text):
     High score = more dramatic or expressive writing
     """
     words = nltk.word_tokenize(text)
-    punct = sum(1 for w in words if not w.isalpha())
+    punct = sum(1 for w in words if not w.isalpha()) # Count tokens that are not purely alphabetic (i.e., punctuation)
     total = len(words)
     if total == 0:
         return 0
-    return punct / total
+    return punct / total # punctuation frequency = number of punctuation tokens divided by total tokens
 
 def analyze_corpus(corpus):
     """Run all measurements on every text and return a DataFrame."""
