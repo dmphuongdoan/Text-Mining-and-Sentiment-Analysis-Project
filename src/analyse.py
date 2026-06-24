@@ -1,6 +1,8 @@
 import json
 import nltk # Natural Language Toolkit for text processing
 import pandas as pd
+from textblob import TextBlob # For sentiment analysis
+from textstat import textstat # For readability metrics
 from collections import Counter
 
 # Download NLTK data (only running once time)
@@ -11,8 +13,20 @@ nltk.download('averaged_perceptron_tagger_eng') # Download English part-of-speec
 
 # ============================================================
 # WHAT THIS FILE DOES:
-# Reads corpus.json and measures 5 stylometric features
+# Reads corpus.json and measures 9 stylometric features
 # for each text, then saves results to data/features.csv
+#
+# Stylometric features include:
+# 1. Lexical diversity (unique words / total words)
+# 2. Average sentence length (words per sentence)
+# 3. Adjective ratio (adjectives / total words)
+# 4. Verb ratio (verbs / total words)
+# 5. Noun ratio (nouns / total words)
+# 6. Punctuation frequency (punctuation / total words)
+# 7. Syntactic Depth (average parse tree depth per sentence)
+# 8. Sentiment polarity (TextBlob sentiment analysis)
+# 9. Readability (Flesch Reading Ease)
+
 # ============================================================
 
 def load_corpus(path="data/corpus.json"):
@@ -74,6 +88,45 @@ def punctuation_frequency(text):
         return 0
     return punct / total # punctuation frequency = number of punctuation tokens divided by total tokens
 
+def syntactic_depth(text):
+    """
+    Estimate syntactic complexity by counting
+    subordinating conjunctions and relative pronouns.
+    High score = more complex nested sentence structures.
+    e.g. 'which', 'that', 'because', 'although', 'if'
+    """
+    words = nltk.word_tokenize(text)
+    tags = nltk.pos_tag(words)
+    total = len(words)
+    if total == 0:
+        return 0
+    # IN = subordinating conjunction
+    # WDT = relative pronoun (which, that)
+    # WP = wh-pronoun (who, what)
+    depth_markers = sum(
+        1 for _, t in tags
+        if t in ['IN', 'WDT', 'WP']
+    )
+    return depth_markers / total
+
+def sentiment_polarity(text):
+    """
+    Measure sentiment of the text using TextBlob.
+    -1.0 = very negative
+     0.0 = neutral
+    +1.0 = very positive
+    """
+    return TextBlob(text).sentiment.polarity
+
+def readability(text):
+    """
+    Measure how easy the text is to read.
+    90-100 = very easy (children's book)
+    60-70  = standard (normal prose)
+    0-30   = very difficult (academic)
+    """
+    return textstat.flesch_reading_ease(text)
+
 def analyze_corpus(corpus):
     """Run all measurements on every text and return a DataFrame."""
     rows = []
@@ -92,6 +145,9 @@ def analyze_corpus(corpus):
             "verb_ratio":          round(verb, 3),
             "noun_ratio":          round(noun, 3),
             "punct_frequency":     round(punctuation_frequency(text), 3),
+            "syntactic_depth":     round(syntactic_depth(text), 3),
+            "sentiment_polarity":  round(sentiment_polarity(text), 3),
+            "readability":         round(readability(text), 3)
         })
     return pd.DataFrame(rows)
 
@@ -110,5 +166,5 @@ if __name__ == "__main__":
     print("\n📊 AVERAGE PER MODEL:")
     print(df.groupby("model")[
         ["lexical_diversity", "avg_sentence_length",
-         "adj_ratio", "verb_ratio", "punct_frequency"]
+         "adj_ratio", "verb_ratio", "punct_frequency", "syntactic_depth", "sentiment_polarity", "readability"]
     ].mean().round(3).to_string())

@@ -23,7 +23,10 @@ FEATURES = [
     "adj_ratio",
     "verb_ratio",
     "noun_ratio",
-    "punct_frequency"
+    "punct_frequency",
+    "syntactic_depth",
+    "sentiment_polarity",
+    "readability"
 ]
 
 def load_features(path="data/features.csv"):
@@ -145,7 +148,6 @@ def plot_feature_importance(clf, df, le):
 
     plt.tight_layout()
     plt.savefig("results/feature_importance.png", dpi=150)
-    plt.close()
     print("✅ Saved: results/feature_importance.png")
 
 if __name__ == "__main__":
