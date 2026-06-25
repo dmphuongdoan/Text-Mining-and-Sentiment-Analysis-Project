@@ -7,11 +7,10 @@ import os
 
 # ============================================================
 # WHAT THIS FILE DOES:
-# Reads features.csv and creates 4 visualizations:
-# 1. Bar chart - lexical diversity per model
-# 2. Bar chart - average sentence length per model
-# 3. Bar chart - punctuation frequency per model
-# 4. PCA plot - overall stylistic distance between models
+# Reads features.csv and creates 3 visualizations:
+# 1. Bar charts for each feature (9 total)
+# 2. PCA plot - stylistic distance between models (alternative)
+# 3. t-SNE plot - stylistic distance between models (alternative)
 # NOTE: Now averages across repeats for bar charts
 # ============================================================
 
@@ -21,7 +20,8 @@ def load_features(path="data/features.csv"):
     """Load the stylometric features from CSV."""
     return pd.read_csv(path)
 
-def plot_bar(df, feature, title, ylabel, filename):
+#===========================================================
+#def plot_bar(df, feature, title, ylabel, filename):
     """
     Bar chart: compare one feature across 3 models.
     Averages across repeats and genres.
@@ -58,6 +58,7 @@ def plot_bar(df, feature, title, ylabel, filename):
     plt.tight_layout()
     plt.savefig(f"results/{filename}")
     print(f"✅ Saved: results/{filename}")
+#============================================
 
 def plot_pca(df):
     """
@@ -71,7 +72,10 @@ def plot_pca(df):
         "adj_ratio",
         "verb_ratio",
         "noun_ratio",
-        "punct_frequency"
+        "punct_frequency",
+        "syntactic_depth",
+        "sentiment_polarity",
+        "readability"
     ]
 
     X = df[features].values
@@ -141,7 +145,6 @@ def plot_pca(df):
     plt.savefig("results/pca_styles.png", dpi=150)
     print("✅ Saved: results/pca_styles.png")
 
-
 def plot_tsne(df):
     """
     t-SNE plot: alternative to PCA, often shows clearer clusters.
@@ -155,7 +158,10 @@ def plot_tsne(df):
         "adj_ratio",
         "verb_ratio",
         "noun_ratio",
-        "punct_frequency"
+        "punct_frequency",
+        "syntactic_depth",
+        "sentiment_polarity",
+        "readability"
     ]
 
     X = df[features].values
@@ -225,33 +231,78 @@ def plot_tsne(df):
     plt.savefig("results/tsne_styles.png", dpi=150)
     print("✅ Saved: results/tsne_styles.png")
 
+def plot_all_features(df):
+    """
+    Plot all 9 stylometric features in one figure (3x3 grid).
+    Easier to compare all features at once.
+    """
+    features = [
+        ("lexical_diversity",   "Lexical Diversity",         "unique/total words"),
+        ("avg_sentence_length", "Avg Sentence Length",       "words/sentence"),
+        ("punct_frequency",     "Punctuation Frequency",     "punct/total words"),
+        ("sentiment_polarity",  "Sentiment Polarity",        "-1 neg, +1 pos"),
+        ("adj_ratio",           "Adjective Ratio",           "adj/total words"),
+        ("verb_ratio",          "Verb Ratio",                "verbs/total words"),
+        ("noun_ratio",          "Noun Ratio",                "nouns/total words"),
+        ("syntactic_depth",     "Syntactic Depth",           "subclause/total words"),
+        ("readability",         "Readability (Flesch)",      "0=hard, 100=easy"),
+    ]
+
+    models = df["model"].unique()
+    genres = df["genre"].unique()
+    colors = ["#4C72B0", "#DD8452", "#55A868", "#C44E52"]
+
+    fig, axes = plt.subplots(3, 3, figsize=(18, 14))
+    axes = axes.flatten()
+
+    for idx, (feature, title, ylabel) in enumerate(features):
+        ax = axes[idx]
+        x = np.arange(len(models))
+        width = 0.2
+
+        for i, genre in enumerate(genres):
+            means = []
+            stds = []
+            for m in models:
+                vals = df[(df["model"] == m) & (df["genre"] == genre)][feature].values
+                means.append(np.mean(vals))
+                stds.append(np.std(vals))
+            ax.bar(x + i * width, means, width,
+                   label=genre, color=colors[i],
+                   yerr=stds, capsize=2)
+
+        ax.set_title(title, fontsize=11, fontweight="bold")
+        ax.set_ylabel(ylabel, fontsize=8)
+        ax.set_xticks(x + width * 1.5)
+        ax.set_xticklabels(models, fontsize=9)
+        ax.grid(axis="y", alpha=0.3)
+
+    # Shared legend at the bottom
+    handles = [
+        mpatches.Patch(color=colors[i], label=genre)
+        for i, genre in enumerate(genres)
+    ]
+    fig.legend(handles=handles, title="Genre",
+               loc="lower center", ncol=4,
+               fontsize=10, bbox_to_anchor=(0.5, 0.01))
+
+    fig.suptitle("Stylometric Features by Model and Genre",
+                 fontsize=16, fontweight="bold", y=1.01)
+
+    plt.tight_layout(rect=[0, 0.05, 1, 1])
+    plt.savefig("results/all_features.png", dpi=150, bbox_inches="tight")
+    print("✅ Saved: results/all_features.png")
+
 if __name__ == "__main__":
     df = load_features()
 
-    plot_bar(df,
-        feature="lexical_diversity",
-        title="Lexical Diversity by Model and Genre",
-        ylabel="Lexical Diversity (unique/total words)",
-        filename="lexical_diversity.png"
-    )
+    # All 9 features in one figure
+    plot_all_features(df)
 
-    plot_bar(df,
-        feature="avg_sentence_length",
-        title="Average Sentence Length by Model and Genre",
-        ylabel="Average words per sentence",
-        filename="sentence_length.png"
-    )
-
-    plot_bar(df,
-        feature="punct_frequency",
-        title="Punctuation Frequency by Model and Genre",
-        ylabel="Punctuation marks per word",
-        filename="punctuation.png"
-    )
-
+    # PCA
     plot_pca(df)
 
-    print("\n🎉 All charts saved in results/ folder!")
-
-    # Chart 5: t-SNE
+    # t-SNE
     plot_tsne(df)
+
+    print("\n🎉 All charts saved in results/ folder!")

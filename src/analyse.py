@@ -166,5 +166,6 @@ if __name__ == "__main__":
     print("\n📊 AVERAGE PER MODEL:")
     print(df.groupby("model")[
         ["lexical_diversity", "avg_sentence_length",
-         "adj_ratio", "verb_ratio", "punct_frequency", "syntactic_depth", "sentiment_polarity", "readability"]
+         "adj_ratio", "verb_ratio", "noun_ratio",
+         "punct_frequency", "syntactic_depth", "sentiment_polarity", "readability"]
     ].mean().round(3).to_string())

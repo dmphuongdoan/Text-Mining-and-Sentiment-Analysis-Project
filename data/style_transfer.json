@@ -13,15 +13,15 @@
       "readability": 69.354
     },
     "transferred": {
-      "lexical_diversity": 0.637,
-      "avg_sentence_length": 224.0,
-      "adj_ratio": 0.08,
-      "verb_ratio": 0.174,
-      "noun_ratio": 0.232,
-      "punct_frequency": 0.054,
-      "syntactic_depth": 0.161,
-      "sentiment_polarity": 0.127,
-      "readability": -144.799
+      "lexical_diversity": 0.695,
+      "avg_sentence_length": 22.857,
+      "adj_ratio": 0.085,
+      "verb_ratio": 0.138,
+      "noun_ratio": 0.231,
+      "punct_frequency": 0.155,
+      "syntactic_depth": 0.123,
+      "sentiment_polarity": 0.058,
+      "readability": 34.92
     },
     "qwen72_avg": {
       "lexical_diversity": 0.705,
@@ -34,8 +34,7 @@
       "sentiment_polarity": 0.13,
       "readability": 62.937
     },
-    "original_text": "In the quaint town of Eldridge, orphaned Lily found solace in the old, dusty attic. Among the relics",
-    "transferred_text": "In the quaint town of Eldridge, an orphaned girl named Lily discovered a profound sense of solace wi"
+    "n_runs": 3
   },
   {
     "genre": "argumentation",
@@ -51,15 +50,15 @@
       "readability": 19.59
     },
     "transferred": {
-      "lexical_diversity": 0.691,
-      "avg_sentence_length": 168.0,
-      "adj_ratio": 0.155,
-      "verb_ratio": 0.119,
-      "noun_ratio": 0.327,
-      "punct_frequency": 0.018,
-      "syntactic_depth": 0.149,
-      "sentiment_polarity": 0.103,
-      "readability": -143.086
+      "lexical_diversity": 0.689,
+      "avg_sentence_length": 30.486,
+      "adj_ratio": 0.154,
+      "verb_ratio": 0.123,
+      "noun_ratio": 0.275,
+      "punct_frequency": 0.127,
+      "syntactic_depth": 0.128,
+      "sentiment_polarity": 0.152,
+      "readability": -13.475
     },
     "qwen72_avg": {
       "lexical_diversity": 0.676,
@@ -72,8 +71,7 @@
       "sentiment_polarity": 0.101,
       "readability": 20.024
     },
-    "original_text": "For AI in art and creativity:\nAI can generate unique and innovative artworks, pushing creative bound",
-    "transferred_text": "Regarding the integration of artificial intelligence in the realms of art and creativity, one can ar"
+    "n_runs": 3
   },
   {
     "genre": "dialogue",
@@ -89,15 +87,15 @@
       "readability": 84.044
     },
     "transferred": {
-      "lexical_diversity": 0.657,
-      "avg_sentence_length": 25.375,
-      "adj_ratio": 0.128,
-      "verb_ratio": 0.153,
-      "noun_ratio": 0.246,
-      "punct_frequency": 0.108,
-      "syntactic_depth": 0.143,
-      "sentiment_polarity": 0.176,
-      "readability": 15.938
+      "lexical_diversity": 0.696,
+      "avg_sentence_length": 18.455,
+      "adj_ratio": 0.105,
+      "verb_ratio": 0.156,
+      "noun_ratio": 0.189,
+      "punct_frequency": 0.132,
+      "syntactic_depth": 0.094,
+      "sentiment_polarity": 0.199,
+      "readability": 35.845
     },
     "qwen72_avg": {
       "lexical_diversity": 0.604,
@@ -110,8 +108,7 @@
       "sentiment_polarity": 0.301,
       "readability": 91.998
     },
-    "original_text": "**Alex:** Hannah! It\u2019s been too long! How are you?\n\n**Hannah:** Alex! You look amazing! I\u2019m great, j",
-    "transferred_text": "Alex greeted Hannah with an enthusiastic exclamation, noting that it had been an extended period sin"
+    "n_runs": 3
   },
   {
     "genre": "description",
@@ -127,15 +124,15 @@
       "readability": 43.687
     },
     "transferred": {
-      "lexical_diversity": 0.727,
-      "avg_sentence_length": 30.8,
-      "adj_ratio": 0.123,
-      "verb_ratio": 0.097,
-      "noun_ratio": 0.292,
-      "punct_frequency": 0.097,
-      "syntactic_depth": 0.13,
-      "sentiment_polarity": 0.238,
-      "readability": 27.677
+      "lexical_diversity": 0.829,
+      "avg_sentence_length": 22.333,
+      "adj_ratio": 0.134,
+      "verb_ratio": 0.105,
+      "noun_ratio": 0.295,
+      "punct_frequency": 0.146,
+      "syntactic_depth": 0.107,
+      "sentiment_polarity": 0.166,
+      "readability": 17.227
     },
     "qwen72_avg": {
       "lexical_diversity": 0.67,
@@ -148,7 +145,6 @@
       "sentiment_polarity": 0.238,
       "readability": 59.095
     },
-    "original_text": "As the sun begins its descent over the Mediterranean, the sky transforms into a breathtaking canvas ",
-    "transferred_text": "As the sun commences its gradual descent over the expansive Mediterranean, the expansive sky undergo"
+    "n_runs": 3
   }
 ]
