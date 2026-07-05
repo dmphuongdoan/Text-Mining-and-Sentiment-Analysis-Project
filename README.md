@@ -1,4 +1,4 @@
-# P13: The Aesthetics of Generation
+# Project 13: The Aesthetics of Generation
 ### Stylometric Analysis of Writing Style in Qwen Language Models
 
 **Course:** Text Mining and Sentiment Analysis (Natural Language Processing)  
