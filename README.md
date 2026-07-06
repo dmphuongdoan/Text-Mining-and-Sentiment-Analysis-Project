@@ -3,7 +3,7 @@
 
 **Course:** Text Mining and Sentiment Analysis (Natural Language Processing)  
 **University:** Università degli Studi di Milano  
-**Author:** Duy My Phuong Doan  
+**By:** Duy My Phuong Doan  
 
 ---
 
